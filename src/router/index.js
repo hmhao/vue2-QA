@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/page/Home'
-//import Item from '@/page/Item'
+import Game from '@/page/Game'
 //import Score from '@/page/Score'
 
 Vue.use(Router)
@@ -9,13 +9,12 @@ Vue.use(Router)
 export default new Router({
   routes: [{
     path: '/',
-    component: Home,
-    children: [/*{
-      path: 'item',
-      component: Item
-    }, {
-      path: '/score',
-      component: Score
-    }*/]
-  }]
+    component: Home
+  },{
+    path: '/game',
+    component: Game
+  }/*, {
+    path: '/score',
+    component: Score
+  }*/]
 })
