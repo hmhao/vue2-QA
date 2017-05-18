@@ -1,5 +1,5 @@
 <template>
-  <div class="item-page" :class="{animate: active}">
+  <div class="game-page" :class="{animate: active}">
     <div class="score-bar">
       <span class="score">{{score}}/{{total}}</span>
       <img class="bar" src="../assets/images/score_bar.png">
@@ -10,9 +10,10 @@
       <div class="content" v-text="content"></div>
     </div>
     <div class="chooses">
-      <qa-choose v-for="(choose, i) in chooses" :key="choose.id"
+      <qa-choose class="choose" v-for="(choose, i) in chooses" :key="choose.id"
         :index="i"
-        :text="choose"></qa-choose>
+        :text="choose"
+        @choose-answer="chooseAnswer"></qa-choose>
     </div>
     <img class="bottom" src="../assets/images/game_page_bottom_star.png">
   </div>
@@ -41,6 +42,11 @@ export default {
 	components: {
  		qaChoose
 	},
+  methods: {
+    chooseAnswer (index) {
+      //console.log('chooseAnswer', index)
+    }
+  },
 	created(){
 		//this.$store.commit('REMBER_TIME');
 	}
@@ -51,7 +57,7 @@ export default {
 <style lang="less">
 @import (reference) '../assets/style/common';
 
-.item-page {
+.game-page {
   background-image: url(../assets/images/game_bg.jpg);
   width: 100%;
   height: 100%;
@@ -63,7 +69,7 @@ export default {
     width: 390px;
     height: 65px;
     margin:0 auto;
-    transform: scale(.8);
+    transform: translateY(-2000px);
 
     .score {
       position: absolute;
@@ -92,7 +98,7 @@ export default {
     width: 420px;
     height: 174px;
     margin: 40px auto 0;
-    transform: scale(.9);
+    transform: translateY(-2000px);
 
     .title {
       margin: 5px 0 0;
@@ -108,13 +114,127 @@ export default {
     width: 340px;
     margin: 0 auto;
     transform: scale(.9);
+    .choose{
+      &:nth-child(2n) {
+        transform: translateX(-2000px);
+      }
+      &:nth-child(2n+1) {
+        transform: translateX(2000px);
+      }
+    }
   }
 
   .bottom {
     position: absolute;
-    bottom: 0;
+    bottom: -150px;
     left: 0;
     width: 100%;
+  }
+}
+
+.game-page.animate {
+  .bounce-in-down (@name, @scale) {
+    @biName: '@{name}_bounce_in_down';
+    animation:@biName 0.8s 1 ease forwards;
+    .keyframes(all,@biName,{
+      0% {
+        opacity: 0;
+        transform: scale(@scale) translateY(-2000px);
+      }
+      
+      60% {
+        opacity: 1;
+        transform: scale(@scale) translateY(30px);
+      }
+      
+      80% {
+        transform: scale(@scale) translateY(-10px);
+      }
+      
+      100% {
+        transform: scale(@scale) translateY(0);
+      }
+    });
+  }
+
+  .score-bar {
+    .bounce-in-down('score-bar', .8);
+  }
+
+  .question {
+    .bounce-in-down('question', .9);
+  }
+
+  .chooses {
+    .bounce-in-left (@name, @delay) {
+      @biName: '@{name}_bounce_in_left';
+      &:nth-child(2n) {
+        animation:@biName 0.8s 1 @delay ease forwards;
+        .keyframes(all,@biName,{
+          0% {
+            opacity: 0;
+            transform: translateX(-2000px);
+          }
+          
+          60% {
+            opacity: 1;
+            transform: translateX(30px);
+          }
+          
+          80% {
+            transform: translateX(-10px);
+          }
+          
+          100% {
+            transform: translateX(0);
+          }
+        });
+      }
+    }
+
+    .bounce-in-right (@name, @delay) {
+      @biName: '@{name}_bounce_in_right';
+      &:nth-child(2n+1) {
+        animation:@biName 0.8s 1 @delay ease forwards;
+        .keyframes(all,@biName,{
+          0% {
+            opacity: 0;
+            transform: translateX(2000px);
+          }
+          
+          60% {
+            opacity: 1;
+            transform: translateX(-30px);
+          }
+          
+          80% {
+            transform: translateX(10px);
+          }
+          
+          100% {
+            transform: translateX(0);
+          }
+        });
+      }
+    }
+
+    .choose {
+      .bounce-in-left('choose', 0.3s);
+      .bounce-in-right('choose', 0.3s);
+    }
+  }
+
+  .bottom {
+    animation:star_move_up 0.8s 1 0.3s ease-in forwards;
+
+    .keyframes(all,star_move_up,{
+      from {
+        bottom: -150px
+      }
+      to {
+        bottom: 0px
+      }
+    });
   }
 }
 

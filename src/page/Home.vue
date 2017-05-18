@@ -22,7 +22,7 @@ export default {
 @import (reference) '../assets/style/common';
 
 .home-page {
-  background-image: url(../assets/images/home_page_bg.jpg);
+  background-image: url("@{baseImagePath}/home_page_bg.jpg");
   width: 100%;
   height: 100%;
   text-align: center;
@@ -47,7 +47,7 @@ export default {
   }
 
   .start {
-    background: url(../assets/images/start_button.png) no-repeat;
+    background: url("@{baseImagePath}/start_button.png") no-repeat;
     width: 48px;
     height: 60px;
     opacity: 0;
@@ -57,7 +57,7 @@ export default {
   }
 }
 
-.animate {
+.home-page.animate {
   .logo {
     animation:logo_bounce_in 0.8s 1 ease forwards;
     .keyframes(all,logo_bounce_in,{

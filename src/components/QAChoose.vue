@@ -1,5 +1,5 @@
 <template>
-  <div :class="[choose]" v-text="text"></div>
+  <div :class="[choose]" v-text="text" @click="$emit('choose-answer', index)"></div>
 </template>
 
 <script>
@@ -10,41 +10,77 @@ export default {
   props: ['index', 'text'],
   computed: {
     choose () {
-      let c = 'choose-';
-      switch(this.index){
-        case 0: c += 'a';break;
-        case 1: c += 'b';break;
-        case 2: c += 'c';break;
-        case 3: c += 'd';break;
-      }
-      return c
+      return 'choose-' + String.fromCharCode(97 + this.index)
     }
   }
 }
 </script>
 
 <style lang="less">
-.choose-size {
+@import (reference) '../assets/style/common';
+
+@names: a, b, c, d;
+@length: length(@names);
+
+.choose {
   width: 336px;
   height: 72px;
   margin-bottom: 20px;
 }
 
-.choose-a {
-  background: url(../assets/images/choose_a.png) no-repeat;
-  .choose-size();
+.generate-choose(@names; @index) when (@index > 0) {
+  .generate-choose(@names; (@index - 1));
+
+  @name: extract(@names, @index);
+  &-@{name}:extend(.choose) {
+    background: url("@{baseImagePath}/choose_@{name}.png") no-repeat;
+  }
 }
-.choose-b {
-  background: url(../assets/images/choose_b.png) no-repeat;
-  .choose-size();
+
+.choose {
+  .generate-choose(@names, @length)
 }
-.choose-c {
-  background: url(../assets/images/choose_c.png) no-repeat;
-  .choose-size();
+
+/*
+.choose {
+  &-a, &-b, &-c, &-d {
+    width: 336px;
+    height: 72px;
+    margin-bottom: 20px;
+  }
+  &-a {
+    background: url("@{baseImagePath}/choose_a.png") no-repeat;
+  }
+  &-b {
+    background: url("@{baseImagePath}/choose_b.png") no-repeat;
+  }
+  &-c {
+    background: url("@{baseImagePath}/choose_c.png") no-repeat;
+  }
+  &-d {
+    background: url("@{baseImagePath}/choose_d.png") no-repeat;
+  }
 }
-.choose-d {
-  background: url(../assets/images/choose_d.png) no-repeat;
-  .choose-size();
+*/
+/*
+.choose {
+  width: 336px;
+  height: 72px;
+  margin-bottom: 20px;
 }
+
+.choose-a:extend(.choose) {
+  background: url("@{baseImagePath}/choose_a.png") no-repeat;
+}
+.choose-b:extend(.choose) {
+  background: url("@{baseImagePath}/choose_b.png") no-repeat;
+}
+.choose-c:extend(.choose) {
+  background: url("@{baseImagePath}/choose_c.png") no-repeat;
+}
+.choose-d:extend(.choose) {
+  background: url("@{baseImagePath}/choose_d.png") no-repeat;
+}
+*/
 
 </style>
