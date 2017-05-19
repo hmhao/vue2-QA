@@ -1,18 +1,18 @@
 <template>
   <div class="game-page" :class="{animate: active}">
-    <div class="score-bar">
-      <span class="score">{{score}}/{{total}}</span>
-      <img class="bar" src="../assets/images/score_bar.png">
-      <div class="progress" :style="{width: score + 'px'}"></div>
+    <div class="header-bar">
+      <span class="score">{{score}}</span>
+      <img class="bar" src="../assets/images/time_bar.png">
+      <div class="progress" :style="{width: time + '%'}"></div>
     </div>
     <div class="question">
       <span class="title">第{{index}}题</span>
       <div class="content" v-text="content"></div>
     </div>
     <div class="chooses">
-      <qa-choose class="choose" v-for="(choose, i) in chooses" :key="choose.id"
-        :index="i"
-        :text="choose"
+      <qa-choose class="choose" v-for="(v, k) in chooses" :key="k"
+        :text="v"
+        :value="k"
         @choose-answer="chooseAnswer"></qa-choose>
     </div>
     <img class="bottom" src="../assets/images/game_page_bottom_star.png">
@@ -21,35 +21,29 @@
 
 <script>
 import qaChoose from '@/components/QAChoose'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default {
 	name: 'game',
-  data () {
-    return {
-      score: 40,
-      total: 120,
-      index: 1,
-      content: '我是问题，我是问题，我是问题，我是问题，我是问题？',
-      chooses: [
-        'a',
-        'b',
-        'c',
-        'd'
-      ]
-    }
-  },
   props: ['active'],
-	components: {
- 		qaChoose
-	},
-  methods: {
-    chooseAnswer (index) {
-      //console.log('chooseAnswer', index)
+  computed: mapGetters(['index', 'content', 'chooses', 'score', 'time', 'gameOver']),
+	watch: {
+    gameOver (value) {
+      if (value) {
+        this.$router.push({path: '/score'})
+      }
     }
   },
-	created(){
-		//this.$store.commit('REMBER_TIME');
-	}
+  methods: mapActions(['chooseAnswer', 'initGame', 'startGame']),
+  created () {
+    this.initGame()
+  },
+  mounted () {
+    this.startGame()
+  },
+  components: {
+    qaChoose
+  },
 }
 
 </script>
@@ -58,12 +52,12 @@ export default {
 @import (reference) '../assets/style/common';
 
 .game-page {
-  background-image: url(../assets/images/game_bg.jpg);
+  background-image: url(../assets/images/game_page_bg.jpg);
   width: 100%;
   height: 100%;
   text-align: center;
 
-  .score-bar {
+  .header-bar {
     position: relative;
     top: 20px;
     width: 390px;
@@ -72,9 +66,8 @@ export default {
     transform: translateY(-2000px);
 
     .score {
-      position: absolute;
+      position: relative;
       top: -15px;
-      left: 170px;
       color: #fbf05e;
     }
 
@@ -88,8 +81,8 @@ export default {
       height: 30px;
       left: 45px;
       top: 26px;
-      background: url(../assets/images/score_progress.png) no-repeat;
-      -webkit-mask-image: url(../assets/images/score_progress_mask.jpg);
+      background: url(../assets/images/time_bar_progress.png) no-repeat;
+      -webkit-mask-image: url(../assets/images/time_bar_progress_mask.jpg);
     }
   }
 
@@ -157,8 +150,8 @@ export default {
     });
   }
 
-  .score-bar {
-    .bounce-in-down('score-bar', .8);
+  .header-bar {
+    .bounce-in-down('header-bar', .8);
   }
 
   .question {

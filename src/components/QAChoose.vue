@@ -1,16 +1,17 @@
 <template>
-  <div :class="[choose]" v-text="text" @click="$emit('choose-answer', index)"></div>
+  <div :class="[choose]" @click="$emit('choose-answer', value)">
+    <span class="choose-text" v-text="text"></span>
+  </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'qa-choose',
-  props: ['index', 'text'],
+  props: ['value', 'text'],
   computed: {
     choose () {
-      return 'choose-' + String.fromCharCode(97 + this.index)
+      return 'choose-' + this.value.toLowerCase()
     }
   }
 }
@@ -18,6 +19,14 @@ export default {
 
 <style lang="less">
 @import (reference) '../assets/style/common';
+
+.choose-text {
+  display: block;
+  width: 260px;
+  height: 72px;
+  line-height: 62px;
+  margin: 0 0 0 63px;
+}
 
 @names: a, b, c, d;
 @length: length(@names);
