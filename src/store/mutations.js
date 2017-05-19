@@ -37,6 +37,7 @@ const mutations = {
 	[INIT_GAME](state) {
 		state.index = 0
 		state.score = 0
+		state.time = 0
 		state.allTime = 0
 		state.gameStart = false
 		state.gameOver = false

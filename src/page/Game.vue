@@ -21,7 +21,7 @@
 
 <script>
 import qaChoose from '@/components/QAChoose'
-import { mapGetters, mapActions, mapMutations } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
 	name: 'game',
@@ -39,7 +39,15 @@ export default {
     this.initGame()
   },
   mounted () {
-    this.startGame()
+    let chooses = document.querySelector('.chooses')
+    let animationCount = 0
+    let onAnimationEnd = () => {
+      if (++animationCount >= Object.keys(this.chooses).length) {
+        chooses.removeEventListener(window.animationEnd, onAnimationEnd)
+        this.startGame()
+      }
+    }
+    chooses.addEventListener(window.animationEnd, onAnimationEnd)
   },
   components: {
     qaChoose

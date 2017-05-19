@@ -21,3 +21,33 @@
       clearTimeout(id);
     };
 }());
+
+(function ( document, window ) {
+  var i,
+    el = document.createElement('div'),
+    transitions = {
+      'WebkitTransition':'webkitTransitionEnd',
+      'MozTransition':'mozTransitionEnd',
+      'OTransition':'oTransitionEnd',  // oTransitionEnd in very old Opera
+      'transition':'transitionend'
+    },
+    animations = {
+      'WebkitAnimation':'webkitAnimationEnd',
+      'MozAnimation':'mozAnimationEnd',
+      'OAnimation':'oAnimationEnd',  // oTransitionEnd in very old Opera
+      'animation':'animationend'
+    };
+
+  function whichEvent (events) {
+    var event;
+    for (i in events) {
+      if (events.hasOwnProperty(i) && el.style[i] !== undefined) {
+        event = events[i];
+        break;
+      }
+    }
+    return event
+  }
+  window.transitionEnd = whichEvent(transitions);
+  window.animationEnd = whichEvent(animations);
+}( document, window ));
