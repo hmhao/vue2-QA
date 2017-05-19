@@ -6,8 +6,7 @@ const START_GAME = 'START_GAME'
 const STOP_GAME = 'STOP_GAME'
 
 let allData = []
-let fps = 60
-let interval = 1000 / fps
+let timeStep = 1000 / 60
 let timer = 0
 let startTime = 0
 
@@ -41,24 +40,26 @@ const mutations = {
 		state.allTime = 0
 		state.gameStart = false
 		state.gameOver = false
-		clearInterval(timer)
+		cancelAnimationFrame(timer)
 	},
 
 	[START_GAME](state) {
 		state.gameStart = true
 		if (state.canStart) {
 			startTime = new Date().getTime()
-			timer = setInterval(() => {
-				state.time += interval
+			const update = function() {
+				state.time += timeStep
 				if (state.time >= state.limitTime) {
 					mutations[NEXT_ITEM](state)
 				}
-			}, interval)
+				timer = requestAnimationFrame(update)
+			}
+			timer = requestAnimationFrame(update)
 		}
 	},
 
 	[STOP_GAME](state) {
-		clearInterval(timer)
+		cancelAnimationFrame(timer)
 		let now = new Date().getTime()
 		state.allTime = ((now - startTime) / 1000).toFixed(2)
 		state.gameOver = true

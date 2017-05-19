@@ -6,6 +6,7 @@ import router from '@/router'
 import store from '@/store'
 import '@/assets/style/common'
 import '@/config/rem'
+import '@/config/polyfill'
 
 Vue.config.productionTip = false
 
